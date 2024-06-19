@@ -17,11 +17,16 @@ if place:
 
     if option == "Temperature":
         temperatures = [dict["main"]["temp"]/10 for dict in filtered_data]
+        temps_fahrenheit = [temp * 1.8 + 32 for temp in temperatures]
         dates = [dict["dt_txt"] for dict in filtered_data]
         # create a temperature plot
-        figure = px.line(x=dates, y=temperatures, labels={"x": "Date", "y": "Temperature(C)"})
+        figure = px.line(x=dates, y=temps_fahrenheit, labels={"x": "Date", "y": "Temperature(F)"})
         st.plotly_chart(figure)
 
     if option == "Sky":
-        sky_data = [dict["weather"][0]["main"] for dict in filtered_data]
-        st.image()
+        images = {"Clear": "images/clear.png", "Clouds": "images/cloud.png",
+                  "Rain": "images/rain.png", "Snow": "images/snow.png"}
+        sky_conditions = [dict["weather"][0]["main"] for dict in filtered_data]
+        image_paths = [images[condition] for condition in sky_conditions]
+        print(sky_conditions)
+        st.image(image_paths, width=115)
